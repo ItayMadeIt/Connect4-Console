@@ -6,12 +6,17 @@ int main(void)
 {
 	int64_t a = 1 << 1;
 
-	for (int i = 0; i < ROWS * (COLUMNS + 1); i++)
+	Board b();
+
+	for (size_t i = 0; i < COLUMNS; i++)
 	{
-		printf("iter-%d\n", i);
-		Board::printInt64(a-1);
-		printf("%lld", a);
-		getchar();
-		a <<= 1;
-	}	
+		Board::printInt64(COLUMNS_ARR[i]);
+		printf("\n");
+	}
+
+	for (size_t i = 0; i < ROWS; i++)
+	{
+		Board::printInt64(ROWS_ARR[i]);
+		printf("\n");
+	}
 }
