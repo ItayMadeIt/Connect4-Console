@@ -65,6 +65,7 @@ struct Board
 
 	static void printBoard(Board board);
 	static void playMove(Board* board, unsigned char move);
+	static void undoMove(Board* board, unsigned char move);
 	static bool isMoveLegal(Board board, unsigned char move);
 	static void printInt64(int64 value) ;
 	static bool isBitOn(int64 value, unsigned char position);

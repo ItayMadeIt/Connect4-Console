@@ -45,8 +45,24 @@ void Board::printBoard(Board board)
 
 void Board::playMove(Board* board, unsigned char move)
 {
-	// add to the board (OR) the top move using a nice trick for adding a move ontop 
+	// add to the board (OR) the top move using a nice trick for adding a move on top 
 	board->boards[ALL] |= board->boards[ALL] + (1ll << (move * ROWS));
+
+	// switch board
+	board->boards[CURRENT] ^= board->boards[ALL];
+
+	// switch turn
+	board->isRed = !board->isRed;
+}
+
+void Board::undoMove(Board* board, unsigned char move)
+{
+	// remove the last bit by getting only the piece on the column | (((board->boards[ALL] & COLUMNS_MASKS[move]) >> 1) & COLUMNS_MASKS[move]) |
+	// then getting placing it instead of the current column in all by remove the bits at the column | (board->boards[ALL] & ~COLUMNS_MASKS[move]) |
+	// then ORing it to get a result
+	int64 boardColumnMask = (board->boards[ALL] & ~COLUMNS_MASKS[move]) | (((board->boards[ALL] & COLUMNS_MASKS[move]) >> 1) & COLUMNS_MASKS[move]);
+
+	board->boards[ALL] = boardColumnMask;
 
 	// switch board
 	board->boards[CURRENT] ^= board->boards[ALL];
