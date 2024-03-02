@@ -4,6 +4,7 @@
 
 Board::Board()
 {
+	// reset every board (CURRENT and ALL)
 	for (int i = 0; i < LENGTH; i++)
 	{
 		boards[i] = 0;
@@ -11,16 +12,25 @@ Board::Board()
 }
 Board::Board(const char* game)
 {
+	// reset every board (CURRENT and ALL)
 	for (int i = 0; i < LENGTH; i++)
 	{
 		boards[i] = 0;
 	}
 	
+	// play each move
 	for (int i = 0; i < strlen(game); i++)
 	{
-		char move = game[i];
+		unsigned char move = game[i] - '1';
+		
+		if (!isMoveLegal(*this, move))
+		{
+			printf("~~~Initalization move [%hhu] was not legal (full column), move's index is [%d]~~~\n", move+1, i);
 
-		playMove(this, move - '1');
+			return;
+		}
+
+		playMove(this, move);
 	}
 }
 
@@ -60,15 +70,34 @@ void Board::undoMove(Board* board, unsigned char move)
 	// remove the last bit by getting only the piece on the column | (((board->boards[ALL] & COLUMNS_MASKS[move]) >> 1) & COLUMNS_MASKS[move]) |
 	// then getting placing it instead of the current column in all by remove the bits at the column | (board->boards[ALL] & ~COLUMNS_MASKS[move]) |
 	// then ORing it to get a result
-	int64 boardColumnMask = (board->boards[ALL] & ~COLUMNS_MASKS[move]) | (((board->boards[ALL] & COLUMNS_MASKS[move]) >> 1) & COLUMNS_MASKS[move]);
-
-	board->boards[ALL] = boardColumnMask;
+	board->boards[ALL] = (board->boards[ALL] & ~COLUMNS_MASKS[move]) | (((board->boards[ALL] & COLUMNS_MASKS[move]) >> 1) & COLUMNS_MASKS[move]);
 
 	// switch board
 	board->boards[CURRENT] ^= board->boards[ALL];
 
 	// switch turn
 	board->isRed = !board->isRed;
+}
+
+bool Board::didWin(Board board)
+{
+	if ((board.boards[CURRENT] & (board.boards[CURRENT] << 1) & (board.boards[CURRENT] << 2) & (board.boards[CURRENT] << 3)) != 0)
+	{
+		return true;
+	}
+	if ((board.boards[CURRENT] & (board.boards[CURRENT] << ROWS) & (board.boards[CURRENT] << 2 * ROWS) & (board.boards[CURRENT] << 3 * ROWS)) != 0)
+	{
+		return true;
+	}
+	if ((board.boards[CURRENT] & (board.boards[CURRENT] << (ROWS + 1)) & (board.boards[CURRENT] << 2 * (ROWS + 1)) & (board.boards[CURRENT] << 3 * (ROWS + 1))) != 0)
+	{
+		return true;
+	}
+	if ((board.boards[CURRENT] & (board.boards[CURRENT] << (ROWS - 1)) & (board.boards[CURRENT] << 2 * (ROWS - 1)) & (board.boards[CURRENT] << 3 * (ROWS - 1))) != 0)
+	{
+		return true;
+	}
+	return false;
 }
 
 bool Board::isMoveLegal(Board board, unsigned char move)

@@ -12,7 +12,7 @@
 
 #define RED_CHAR 'X'
 #define BLUE_CHAR 'O'
-#define EMPTY_CHAR '_'
+#define EMPTY_CHAR '|'
 
 const int64 ROWS_MASKS[ROWS] =
 {
@@ -64,9 +64,11 @@ struct Board
 	Board(const char* game);
 
 	static void printBoard(Board board);
+	static bool isMoveLegal(Board board, unsigned char move);
 	static void playMove(Board* board, unsigned char move);
 	static void undoMove(Board* board, unsigned char move);
-	static bool isMoveLegal(Board board, unsigned char move);
+	static bool didWin(Board board);
+	
 	static void printInt64(int64 value) ;
 	static bool isBitOn(int64 value, unsigned char position);
 	static bool isBitOn(int64 value, signed char col, signed char row);
