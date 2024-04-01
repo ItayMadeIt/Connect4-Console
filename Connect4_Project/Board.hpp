@@ -9,6 +9,7 @@
 #define SIZE ROWS * COLUMNS
 
 #define int64 int64_t
+#define int8 int8_t
 
 #define RED_CHAR 'X'
 #define BLUE_CHAR 'O'

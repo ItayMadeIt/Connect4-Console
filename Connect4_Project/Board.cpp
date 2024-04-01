@@ -63,7 +63,18 @@ void Board::playMove(Board* board, unsigned char move)
 
 	// switch turn
 	board->isRed = !board->isRed;
+
+	// add the move from the count
+	board->moves++;
 }
+/*
+I could go find a nine to five
+Be bored but maybe I'd survive
+More than another year before I fall apart
+
+So hard to comprehend that I've felt dead whilst feeling so alive
+I love my work but hate the fact it claimed my art
+*/
 
 void Board::undoMove(Board* board, unsigned char move)
 {
@@ -77,6 +88,9 @@ void Board::undoMove(Board* board, unsigned char move)
 
 	// switch turn
 	board->isRed = !board->isRed;
+
+	// remove the move from the count
+	board->moves--;
 }
 
 bool Board::didWin(Board board)
